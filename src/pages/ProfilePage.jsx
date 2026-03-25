@@ -1,16 +1,22 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';  // 👈 для выхода
 import useAuthStore from '../store/authStore';
-import '../styles/ProfilePage.css';
 
 function ProfilePage() {
+    const navigate = useNavigate();
     const { user, logout } = useAuthStore();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');  // 👈 переход на главную
+    };
 
     if (!user) {
         return (
-            <div className="profile-page">
-                <div className="profile-card">
-                    <h2>Вы не авторизованы</h2>
-                    <button onClick={() => window.location.href = '/'}>
+            <div className="page">
+                <div className="box">
+                    <h2 className="title">Вы не авторизованы</h2>
+                    <button className="button" onClick={() => navigate('/')}>
                         Перейти к регистрации
                     </button>
                 </div>
@@ -19,45 +25,21 @@ function ProfilePage() {
     }
 
     return (
-        <div className="profile-page">
-            <div className="profile-card">
-                <div className="profile-avatar">
-                    {user.avatar ? (
-                        <img src={user.avatar} alt="avatar" />
-                    ) : (
-                        <div className="avatar-placeholder">
-                            {user.username?.charAt(0).toUpperCase()}
-                        </div>
-                    )}
+        <div className="page">
+            <div className="box profile-card">
+                <div className="avatar-placeholder">
+                    {user.username?.charAt(0).toUpperCase()}
                 </div>
                 
-                <h2>Профиль пользователя</h2>
+                <h2 className="title">Профиль пользователя</h2>
                 
                 <div className="profile-info">
-                    <div className="info-row">
-                        <span className="info-label">Логин:</span>
-                        <span className="info-value">{user.username}</span>
-                    </div>
-                    
-                    <div className="info-row">
-                        <span className="info-label">Email:</span>
-                        <span className="info-value">{user.email}</span>
-                    </div>
-                    
-                    <div className="info-row">
-                        <span className="info-label">Дата регистрации:</span>
-                        <span className="info-value">
-                            {new Date(user.createdAt).toLocaleDateString()}
-                        </span>
-                    </div>
-                    
-                    <div className="info-row">
-                        <span className="info-label">ID:</span>
-                        <span className="info-value">{user.id}</span>
-                    </div>
+                    <p><strong>Логин:</strong> {user.username}</p>
+                    <p><strong>Email:</strong> {user.email}</p>
+                    <p><strong>Дата регистрации:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
                 </div>
                 
-                <button onClick={logout} className="logout-button">
+                <button className="button" onClick={handleLogout}>
                     Выйти из аккаунта
                 </button>
             </div>

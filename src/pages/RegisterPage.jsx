@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';  // 👈 для перехода
 import { loginApi } from "../api/auth";
-import '../styles/SimpleRegister.css';
+import AuthLayout from '../components/AuthLayout';
+import RegistrationForm from '../components/RegistrationForm';
+import StatusMessage from '../components/StatusMessage';
 
-function RegisterPage({ onRegisterSuccess }) {
+function RegisterPage() {
+    const navigate = useNavigate();  // 👈 для перехода на другие страницы
     const [email, setEmail] = useState('');
     const [login, setLogin] = useState('');
     const [pass, setPass] = useState('');
@@ -14,7 +18,7 @@ function RegisterPage({ onRegisterSuccess }) {
         e.preventDefault();
 
         if (!email.includes('@') || !email.includes('.') || email.includes(' ')) {
-            setMessage('❌ Введите корректный email (пример: user@mail.com)');
+            setMessage('❌ Введите корректный email');
             return;
         }
 
@@ -44,16 +48,16 @@ function RegisterPage({ onRegisterSuccess }) {
             });
             
             console.log('Login success:', result);
-            setMessage('✅ Код подтверждения отправлен на email!');
             
-            // Передаем данные на страницу подтверждения
-            setTimeout(() => {
-                onRegisterSuccess({ email, login, pass });
-            }, 1000);
+            // Сохраняем данные и переходим на страницу подтверждения
+            localStorage.setItem('tempEmail', email);
+            localStorage.setItem('tempLogin', login);
+            
+            navigate('/verify', { state: { email, login } });  // 👈 переход
+            setMessage('✅ Код подтверждения отправлен на email!');
             
         } catch (error) {
             console.error('Login error:', error);
-            
             switch(error.status) {
                 case 401:
                     setMessage('❌ Неправильный пароль или email');
@@ -64,12 +68,6 @@ function RegisterPage({ onRegisterSuccess }) {
                 case 409:
                     setMessage('❌ Пользователь с таким email или логином уже существует');
                     break;
-                case 500:
-                    setMessage('❌ Ошибка сервера');
-                    break;
-                case 0:
-                    setMessage('❌ Ошибка сети');
-                    break;
                 default:
                     setMessage(`❌ Ошибка: ${error.message}`);
             }
@@ -79,79 +77,21 @@ function RegisterPage({ onRegisterSuccess }) {
     };
 
     return (
-        <div className="page">
-            <div className="box">
-                <h2 className="title">Регистрация</h2>
-                
-                <form onSubmit={handleSubmit}>
-                    <div className="group">
-                        <label className="label">Email:</label>
-                        <input 
-                            className="input"
-                            type="email" 
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="example@mail.com"
-                            disabled={isLoading}
-                            required
-                        />
-                    </div>
-
-                    <div className="group">
-                        <label className="label">Логин:</label>
-                        <input 
-                            className="input"
-                            type="text" 
-                            value={login}
-                            onChange={(e) => setLogin(e.target.value)}
-                            placeholder="минимум 3 символа"
-                            disabled={isLoading}
-                            required
-                        />
-                    </div>
-
-                    <div className="group">
-                        <label className="label">Пароль:</label>
-                        <input 
-                            className="input"
-                            type="password" 
-                            value={pass}
-                            onChange={(e) => setPass(e.target.value)}
-                            placeholder="минимум 6 символов"
-                            disabled={isLoading}
-                            required
-                        />
-                    </div>
-
-                    <div className="group">
-                        <label className="label">Подтвердите пароль:</label>
-                        <input 
-                            className="input"
-                            type="password" 
-                            value={confirmPass}
-                            onChange={(e) => setConfirmPass(e.target.value)}
-                            placeholder="повторите пароль"
-                            disabled={isLoading}
-                            required
-                        />
-                    </div>
-
-                    <button 
-                        type="submit" 
-                        className="button"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? 'Отправка...' : 'Зарегистрироваться'}
-                    </button>
-                </form>
-                
-                {message && (
-                    <div className={`message ${message.includes('✅') ? 'success' : ''}`}>
-                        {message}
-                    </div>
-                )}
-            </div>
-        </div>
+        <AuthLayout title="Регистрация">
+            <RegistrationForm
+                email={email}
+                setEmail={setEmail}
+                login={login}
+                setLogin={setLogin}
+                pass={pass}
+                setPass={setPass}
+                confirmPass={confirmPass}
+                setConfirmPass={setConfirmPass}
+                onSubmit={handleSubmit}
+                isLoading={isLoading}
+            />
+            <StatusMessage message={message} />
+        </AuthLayout>
     );
 }
 

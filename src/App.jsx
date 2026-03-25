@@ -1,50 +1,31 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';  //  импортируем
 import RegisterPage from './pages/RegisterPage';
 import VerifyPage from './pages/VerifyPage';
 import ProfilePage from './pages/ProfilePage';
 import useAuthStore from './store/authStore';
 
 function App() {
-    const [step, setStep] = useState('register');
-    const [userData, setUserData] = useState({ email: '', login: '' });
     const { isAuthenticated } = useAuthStore();
 
-    if (isAuthenticated) {
-        return <ProfilePage />;
-    }
-
-    const handleRegisterSuccess = (data) => {
-        setUserData(data);
-        setStep('verify');
-    };
-
-    const handleVerifySuccess = () => {
-        setStep('profile');
-    };
-
-    const handleBackToRegister = () => {
-        setStep('register');
-    };
-
     return (
-        <>
-            {step === 'register' && (
-                <RegisterPage onRegisterSuccess={handleRegisterSuccess} />
-            )}
+        <Routes>
+            {/* Если авторизован - профиль, иначе регистрация */}
+            <Route 
+                path="/" 
+                element={isAuthenticated ? <Navigate to="/profile" /> : <RegisterPage />} 
+            />
             
-            {step === 'verify' && (
-                <VerifyPage 
-                    email={userData.email}
-                    login={userData.login}
-                    onBack={handleBackToRegister}
-                    onVerifySuccess={handleVerifySuccess}
-                />
-            )}
+            <Route 
+                path="/verify" 
+                element={<VerifyPage />} 
+            />
             
-            {step === 'profile' && (
-                <ProfilePage />
-            )}
-        </>
+            <Route 
+                path="/profile" 
+                element={isAuthenticated ? <ProfilePage /> : <Navigate to="/" />} 
+            />
+        </Routes>
     );
 }
 

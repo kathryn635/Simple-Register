@@ -1,15 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';  // 👈 для получения данных
 import { verifyCodeApi } from "../api/auth";
-import CodeInput from '../components/CodeInput';
+import AuthLayout from '../components/AuthLayout';
+import VerificationForm from '../components/VerificationForm';
+import StatusMessage from '../components/StatusMessage';
 import useAuthStore from '../store/authStore';
-import '../styles/SimpleRegister.css';
 
-function VerifyPage({ email, login, onBack, onVerifySuccess }) {
+function VerifyPage() {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { setUser } = useAuthStore();
+    
     const [code, setCode] = useState('');
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     
-    const { setUser } = useAuthStore();
+    // Получаем email из location state или из localStorage
+    const email = location.state?.email || localStorage.getItem('tempEmail');
+    const login = location.state?.login || localStorage.getItem('tempLogin');
+
+    useEffect(() => {
+        if (!email) {
+            navigate('/');  // Если нет email, возвращаем на регистрацию
+        }
+    }, [email, navigate]);
 
     const handleVerifyCode = async (e) => {
         e.preventDefault();
@@ -29,20 +43,24 @@ function VerifyPage({ email, login, onBack, onVerifySuccess }) {
             });
             console.log('Verification success:', result);
             
-            // Сохраняем пользователя в Zustand
+            // Сохраняем пользователя
             const userData = {
                 id: result.userId || '123',
                 email: email,
                 username: login,
-                avatar: null,
                 createdAt: new Date().toISOString()
             };
             setUser(userData);
             
             setMessage('✅ Регистрация успешно завершена!');
             
+            // Очищаем временные данные
+            localStorage.removeItem('tempEmail');
+            localStorage.removeItem('tempLogin');
+            
+            // Переходим в профиль через 1.5 секунды
             setTimeout(() => {
-                onVerifySuccess();
+                navigate('/profile');
             }, 1500);
             
         } catch (error) {
@@ -54,52 +72,17 @@ function VerifyPage({ email, login, onBack, onVerifySuccess }) {
     };
 
     return (
-        <div className="page">
-            <div className="box">
-                <h2 className="title">Подтверждение кода</h2>
-                
-                <form onSubmit={handleVerifyCode}>
-                    <div className="group">
-                        <label className="label">Код подтверждения:</label>
-                        <CodeInput
-                            value={code}
-                            onChange={setCode}
-                            disabled={isLoading}
-                            onComplete={(fullCode) => {
-                                if (fullCode.length === 6) {
-                                    handleVerifyCode({ preventDefault: () => {} });
-                                }
-                            }}
-                        />
-                        <p className="hint">Введите 6-значный код из email</p>
-                        <p className="hint">Тестовый код: 123456</p>
-                    </div>
-
-                    <button 
-                        type="submit" 
-                        className="button"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? 'Проверка...' : 'Подтвердить'}
-                    </button>
-
-                    <button 
-                        type="button" 
-                        className="button button-back"
-                        onClick={onBack}
-                        disabled={isLoading}
-                    >
-                        Назад
-                    </button>
-                </form>
-                
-                {message && (
-                    <div className={`message ${message.includes('✅') ? 'success' : ''}`}>
-                        {message}
-                    </div>
-                )}
-            </div>
-        </div>
+        <AuthLayout title="Подтверждение кода">
+            <VerificationForm
+                code={code}
+                setCode={setCode}
+                onSubmit={handleVerifyCode}
+                onBack={() => navigate('/')}
+                isLoading={isLoading}
+                email={email}
+            />
+            <StatusMessage message={message} />
+        </AuthLayout>
     );
 }
 
