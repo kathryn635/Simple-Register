@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // 👈 для перехода
+import { useNavigate } from 'react-router-dom';  // для перехода
 import { loginApi } from "../api/auth";
 import AuthLayout from '../components/AuthLayout';
 import RegistrationForm from '../components/RegistrationForm';
 import StatusMessage from '../components/StatusMessage';
 
 function RegisterPage() {
-    const navigate = useNavigate();  // 👈 для перехода на другие страницы
+    const navigate = useNavigate();  // для перехода на другие страницы
     const [email, setEmail] = useState('');
     const [login, setLogin] = useState('');
     const [pass, setPass] = useState('');
@@ -53,7 +53,7 @@ function RegisterPage() {
             localStorage.setItem('tempEmail', email);
             localStorage.setItem('tempLogin', login);
             
-            navigate('/verify', { state: { email, login } });  // 👈 переход
+            navigate('/verify', { state: { email, login } });  //  переход
             setMessage('✅ Код подтверждения отправлен на email!');
             
         } catch (error) {
