@@ -13,9 +13,13 @@ function App() {
             {/* Если авторизован - профиль, иначе регистрация */}
             <Route 
                 path="/" 
-                element={isAuthenticated ? <Navigate to="/profile" /> : <RegisterPage />} 
+                element={isAuthenticated ? <Navigate to="/profile" /> : <Navigate to ="/registration/>} 
             />
-            
+             
+            <Route 
+                path="/registration" 
+                element={< RegisterPage />} 
+            />
             <Route 
                 path="/verify" 
                 element={<VerifyPage />} 
