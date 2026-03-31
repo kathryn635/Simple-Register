@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';  // 👈 для получения данных
+import { useNavigate, useLocation } from 'react-router-dom';  // для получения данных
 import { verifyCodeApi } from "../api/auth";
 import AuthLayout from '../components/AuthLayout';
 import VerificationForm from '../components/VerificationForm';
