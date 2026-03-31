@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';  // 👈 для выхода
+import { useNavigate } from 'react-router-dom';  //  для выхода
 import useAuthStore from '../store/authStore';
 
 function ProfilePage() {
@@ -8,7 +8,7 @@ function ProfilePage() {
 
     const handleLogout = () => {
         logout();
-        navigate('/');  // 👈 переход на главную
+        navigate('/');  // переход на главную
     };
 
     if (!user) {
