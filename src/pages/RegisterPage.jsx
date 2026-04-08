@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // для перехода
+import { useNavigate } from 'react-router-dom';
 import { loginApi } from "../api/auth";
 import AuthLayout from '../components/AuthLayout';
 import RegistrationForm from '../components/RegistrationForm';
 import StatusMessage from '../components/StatusMessage';
 
 function RegisterPage() {
-    const navigate = useNavigate();  // для перехода на другие страницы
+    const navigate = useNavigate();  // для перехода на другие стр
     const [email, setEmail] = useState('');
     const [login, setLogin] = useState('');
     const [pass, setPass] = useState('');
@@ -18,7 +18,7 @@ function RegisterPage() {
         e.preventDefault();
 
         if (!email.includes('@') || !email.includes('.') || email.includes(' ')) {
-            setMessage('❌ Введите корректный email');
+            setMessage('Введите корректный email');
             return;
         }
 
@@ -33,7 +33,7 @@ function RegisterPage() {
         }
 
         if (pass !== confirmPass) {
-            setMessage('❌ Пароли не совпадают');
+            setMessage('Пароли не совпадают');
             return;
         }
 
@@ -54,22 +54,22 @@ function RegisterPage() {
             localStorage.setItem('tempLogin', login);
             
             navigate('/verify', { state: { email, login } });  //  переход
-            setMessage('✅ Код подтверждения отправлен на email!');
+            setMessage('Код подтверждения отправлен на email!');
             
         } catch (error) {
             console.error('Login error:', error);
             switch(error.status) {
                 case 401:
-                    setMessage('❌ Неправильный пароль или email');
+                    setMessage('Неправильный пароль или email');
                     break;
                 case 403:
-                    setMessage('❌ Пользователь заблокирован');
+                    setMessage('Пользователь заблокирован');
                     break;
                 case 409:
-                    setMessage('❌ Пользователь с таким email или логином уже существует');
+                    setMessage('Пользователь с таким email или логином уже существует');
                     break;
                 default:
-                    setMessage(`❌ Ошибка: ${error.message}`);
+                    setMessage(`Ошибка: ${error.message}`);
             }
         } finally {
             setIsLoading(false);
