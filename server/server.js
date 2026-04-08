@@ -1,6 +1,6 @@
 import express from 'express';
 import http from 'http';
-import { Server } from 'socket.io'; //библиотека для сокетиков
+import { Server } from 'socket.io'; //библиотека для сокетиков, io - сервер котоый слушает и отправлят запросы 
 import cors from 'cors';  // cors - разрешает подключаться к серверу с других сайтов
 
 const app = express();
@@ -10,7 +10,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "*",  //  РАЗРЕШИТЬ ВСЕ АДРЕСА
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST"] //разпкшаем запросы гэт и пост
   }
 });
 
@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
     
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     codes.set(email, { login, password, code });
-    console.log(`📧 Код для ${email}: ${code}`);
+    console.log(` Код для ${email}: ${code}`);
     socket.emit('register_success', { email });
   });
 
