@@ -52,7 +52,7 @@ function VerifyPage() {
             };
             setUser(userData);
             
-            setMessage('✅ Регистрация успешно завершена!');
+            setMessage('Регистрация успешно завершена!');
             
             // Очищаем временные данные
             localStorage.removeItem('tempEmail');
@@ -65,7 +65,7 @@ function VerifyPage() {
             
         } catch (error) {
             console.error('Verification error:', error);
-            setMessage(`❌ ${error.message || 'Неверный код подтверждения'}`);
+            setMessage(`${error.message || 'Неверный код подтверждения'}`);
         } finally {
             setIsLoading(false);
         }
