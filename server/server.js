@@ -1,7 +1,7 @@
 import express from 'express';
 import http from 'http';
-import { Server } from 'socket.io';
-import cors from 'cors';
+import { Server } from 'socket.io'; //библиотека для сокетиков
+import cors from 'cors';  // cors - разрешает подключаться к серверу с других сайтов
 
 const app = express();
 app.use(cors());
