@@ -1,4 +1,3 @@
-/* ========== ОБЩИЕ СТИЛИ ========== */
 .page {
     height: 100vh;
     display: flex;
@@ -22,7 +21,7 @@
     margin-bottom: 30px;
 }
 
-/* ========== ФОРМЫ ========== */
+/* ФОРМа*/
 .group {
     margin-bottom: 20px;
 }
@@ -46,7 +45,7 @@
     border-color: #97396d;
 }
 
-/* ========== КНОПКИ ========== */
+/* КНОПКИ*/
 .button {
     width: 100%;
     padding: 12px;
@@ -71,7 +70,7 @@
     cursor: not-allowed;
 }
 
-/* ========== СООБЩЕНИЯ ========== */
+/* СООБЩЕНИЯ */
 .message {
     margin-top: 15px;
     padding: 10px;
@@ -86,7 +85,7 @@
     color: #0cab1c;
 }
 
-/* ========== КОД (6 полей) ========== */
+/* КОД (6 полей) */
 .code-input-container {
     display: flex;
     gap: 10px;
@@ -116,7 +115,7 @@
     margin-top: 10px;
 }
 
-/* ========== ПРОФИЛЬ ========== */
+/* ПРОФИЛЬ*/
 .profile-card {
     text-align: center;
 }
